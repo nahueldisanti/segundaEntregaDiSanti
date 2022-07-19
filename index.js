@@ -38,23 +38,40 @@ const provincias = [
 
 ]
 
-let formulario = document.getElementById("formulario");
-let nombreIngresado = document.getElementById("nombre");
-let distanciaIngresada = document.getElementById("distancia");
-let valorHotelIngresado = document.getElementById("valorhotel");
-let datoProvinciaIngresado = document.getElementById("datocurioso");
-let provinciaAgregada = document.getElementById("provinciaAgregada");
+let provinciasAgregadas1 = []
 
-let formCalculadora = document.getElementById("formCalculadora");
-let destino = document.getElementById("destino");
-let presupuestoOtorgado = document.getElementById("presupuesto");
-let cantidadDias = document.getElementById("dias");
+let formulario;
+let nombreIngresado;
+let distaHotelIngresado;
+let datoProvinciaIngresado;
+let provinciaAgregada;
 
-let provinciasAgregadas1 = [];
+let formCalculadora;
+let destino;
+let presupuestoOtorgado;
+let cantidadDias;
 
-btnEnvio.addEventListener("click", (event) => validarFormulario(event));
-btnCalcular.addEventListener("click", (event) => calculadora(event));
-btnHistorial.addEventListener("click", (event) => listaProvinciasAgregadas(event));
+function inicializarElementos() {
+
+    formulario = document.getElementById("formulario");
+    nombreIngresado = document.getElementById("nombre");
+    distanciaIngresada = document.getElementById("distancia");
+    valorHotelIngresado = document.getElementById("valorhotel");
+    datoProvinciaIngresado = document.getElementById("datocurioso");
+    provinciaAgregada = document.getElementById("provinciaAgregada");
+
+    formCalculadora = document.getElementById("formCalculadora");
+    destino = document.getElementById("destino");
+    presupuestoOtorgado = document.getElementById("presupuesto");
+    cantidadDias = document.getElementById("dias");
+}
+
+function inicializarPropiedades() {
+
+    btnEnvio.addEventListener("click", (event) => validarFormulario(event));
+    btnCalcular.addEventListener("click", (event) => calculadora(event));
+    btnHistorial.addEventListener("click", (event) => listaProvinciasAgregadas(event));
+}
 
 function traslado(kilometros, valor) {
 
@@ -145,16 +162,10 @@ function validarFormulario(event) {
     provinciaAgregada.innerHTML = '';
     event.preventDefault();
 
-    let provinciasAgregadas1 = [];
-
     let nombre = nombreIngresado.value;
-
     let distancia = parseFloat(distanciaIngresada.value);
-
     let valorHotel = parseFloat(valorHotelIngresado.value);
-
     let datoProvincia = datoProvinciaIngresado.value;
-
     let provincia = new Provincia(
         nombre,
         distancia,
@@ -165,6 +176,7 @@ function validarFormulario(event) {
     provinciasAgregadas1.push(provincia)
     formulario.reset();
     mostrarEnDom(nombre, distancia, valorHotel, datoProvincia);
+    almacenarProvinciasLS()
 }
 
 
@@ -179,14 +191,13 @@ function mostrarEnDom(nombre, distancia, valorHotel, datoProvincia) {
     <h3>Muchas gracias por tu colaboracion :)</h3>`
 }
 
-function almacenarProvinciasLS (provinciasAgregadas1) {
+function almacenarProvinciasLS() {
 
-    localStorage.setItem("provincia", JSON.stringify(provinciasAgregadas1));
+    localStorage.setItem("provincias", JSON.stringify(provinciasAgregadas1));
 }
 
 function listaProvinciasAgregadas(event) {
 
-    almacenarProvinciasLS (provinciasAgregadas1);
     provinciasAgregadas = []
     listaProvincias.innerHTML =
         `<h2>Aqui la lista de destinos que agregaste hasta ahora: </h2>`
@@ -207,3 +218,18 @@ function listaProvinciasAgregadas(event) {
     return provinciasAgregadas
     console.log(provinciasAgregadas);
 }
+
+
+
+
+
+
+
+
+function main () {
+
+    inicializarElementos();
+    inicializarPropiedades()
+}
+
+main ();
