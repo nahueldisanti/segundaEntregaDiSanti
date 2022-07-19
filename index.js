@@ -46,14 +46,15 @@ let datoProvinciaIngresado = document.getElementById("datocurioso");
 let provinciaAgregada = document.getElementById("provinciaAgregada");
 
 let formCalculadora = document.getElementById("formCalculadora");
-
 let destino = document.getElementById("destino");
 let presupuestoOtorgado = document.getElementById("presupuesto");
 let cantidadDias = document.getElementById("dias");
 
+let provinciasAgregadas1 = [];
 
-formulario.addEventListener("click", (event) => validarFormulario(event));
+btnEnvio.addEventListener("click", (event) => validarFormulario(event));
 btnCalcular.addEventListener("click", (event) => calculadora(event));
+btnHistorial.addEventListener("click", (event) => listaProvinciasAgregadas(event));
 
 function traslado(kilometros, valor) {
 
@@ -141,7 +142,10 @@ function mostrarEnDomCalculadora(costoTotal) {
 
 function validarFormulario(event) {
 
+    provinciaAgregada.innerHTML = '';
     event.preventDefault();
+
+    let provinciasAgregadas1 = [];
 
     let nombre = nombreIngresado.value;
 
@@ -158,11 +162,11 @@ function validarFormulario(event) {
         datoProvincia
     );
 
-    provincias.push(provincia)
+    provinciasAgregadas1.push(provincia)
     formulario.reset();
-    provinciaAgregada.innerHTML = '';
     mostrarEnDom(nombre, distancia, valorHotel, datoProvincia);
 }
+
 
 function mostrarEnDom(nombre, distancia, valorHotel, datoProvincia) {
 
@@ -173,4 +177,33 @@ function mostrarEnDom(nombre, distancia, valorHotel, datoProvincia) {
     <p><strong>Valor del Hotel: </strong> ${valorHotel}</p>
     <p><strong>Dato curioso: </strong> ${datoProvincia}</p>
     <h3>Muchas gracias por tu colaboracion :)</h3>`
+}
+
+function almacenarProvinciasLS (provinciasAgregadas1) {
+
+    localStorage.setItem("provincia", JSON.stringify(provinciasAgregadas1));
+}
+
+function listaProvinciasAgregadas(event) {
+
+    almacenarProvinciasLS (provinciasAgregadas1);
+    provinciasAgregadas = []
+    listaProvincias.innerHTML =
+        `<h2>Aqui la lista de destinos que agregaste hasta ahora: </h2>`
+
+    for (i = 0; i < localStorage.length; i++) {
+        let clave = localStorage.key(i);
+        let provinciaLSJSON = localStorage.getItem(clave);
+        let nuevaProvincia = JSON.parse(provinciaLSJSON);
+        provinciasAgregadas.push(nuevaProvincia);
+
+        listaProvincias.innerHTML =
+            `<p><strong>Nombre: </strong> ${nuevaProvincia["nombre"]}</p>
+        <p><strong>Distancia: </strong> ${nuevaProvincia["distancia"]}</p>
+        <p><strong>Valor del Hotel: </strong> ${nuevaProvincia['valorHotel']}</p>
+        <p><strong>Dato curioso: </strong> ${nuevaProvincia['datoProvincia']}</p>`
+    }
+
+    return provinciasAgregadas
+    console.log(provinciasAgregadas);
 }
