@@ -39,6 +39,7 @@ const provincias = [
 ]
 
 let provinciasAgregadas1 = []
+let destinos = [];
 
 let formulario;
 let nombreIngresado;
@@ -70,7 +71,7 @@ function inicializarPropiedades() {
 
     btnEnvio.addEventListener("click", (event) => validarFormulario(event));
     btnCalcular.addEventListener("click", (event) => calculadora(event));
-    btnHistorial.addEventListener("click", (event) => listaProvinciasAgregadas(event));
+    btnHistorial.addEventListener("click", (event) => mostrarEnDomProvinciasAgregadas(event));
 }
 
 function traslado(kilometros, valor) {
@@ -176,7 +177,7 @@ function validarFormulario(event) {
     provinciasAgregadas1.push(provincia)
     formulario.reset();
     mostrarEnDom(nombre, distancia, valorHotel, datoProvincia);
-    almacenarProvinciasLS()
+    almacenarProvinciasLS();
 }
 
 
@@ -196,40 +197,40 @@ function almacenarProvinciasLS() {
     localStorage.setItem("provincias", JSON.stringify(provinciasAgregadas1));
 }
 
-function listaProvinciasAgregadas(event) {
+function obtenerProvinciasAgregadas() {
 
-    provinciasAgregadas = []
+    let destinosGuardados = localStorage.getItem("provincias");
+    if (destinosGuardados !== null) {
+        destinos = JSON.parse(destinosGuardados);
+    }
+    console.log(destinos);
+}
+
+function mostrarEnDomProvinciasAgregadas() {
+
     listaProvincias.innerHTML =
         `<h2>Aqui la lista de destinos que agregaste hasta ahora: </h2>`
 
-    for (i = 0; i < localStorage.length; i++) {
-        let clave = localStorage.key(i);
-        let provinciaLSJSON = localStorage.getItem(clave);
-        let nuevaProvincia = JSON.parse(provinciaLSJSON);
-        provinciasAgregadas.push(nuevaProvincia);
+    for (i in destinos) {
 
+        individual = destinos[i];
+        console.log(individual)
         listaProvincias.innerHTML =
-            `<p><strong>Nombre: </strong> ${nuevaProvincia["nombre"]}</p>
-        <p><strong>Distancia: </strong> ${nuevaProvincia["distancia"]}</p>
-        <p><strong>Valor del Hotel: </strong> ${nuevaProvincia['valorHotel']}</p>
-        <p><strong>Dato curioso: </strong> ${nuevaProvincia['datoProvincia']}</p>`
+            `<p><strong>Nombre: </strong> ${individual["nombre"]}</p>
+        <p><strong>Distancia: </strong> ${individual["distancia"]}</p>
+        <p><strong>Valor del Hotel: </strong> ${individual['valorHotel']}</p>
+        <p><strong>Dato curioso: </strong> ${individual['datoProvincia']}</p>`          
     }
-
-    return provinciasAgregadas
-    console.log(provinciasAgregadas);
+//Luis querido, logro que funcione todo hasta aca ( o eso creo). Sin embargo, no puedo hacer que imprima en pantalla, a traves del DOM todos los objetos. Solo imprime el ultimo, por
+// lo que entiendo que esta sobre escribiendo. Sin embargo, el innerHTML esta adentro del for. Seguro hay algo que no entendi. Podrias explicarme como hacer para que, tal cual aparece uno
+//solo aparezcan todos los objetos del DOM. Gracias
 }
 
-
-
-
-
-
-
-
-function main () {
+function main() {
 
     inicializarElementos();
-    inicializarPropiedades()
+    inicializarPropiedades();
+    obtenerProvinciasAgregadas();
 }
 
-main ();
+main();
